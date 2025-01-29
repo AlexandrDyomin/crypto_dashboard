@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="index.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>MACD</title>
+</head>
+<body>
+    <h1>Прогноз на основе индикатора MACD(12, 26, 9)</h1>
+    <div class="timeframes">
+        <span>Таймфреймы:</span>
+        <div class="radio">
+            <input type="radio" name="timeframe" id="1h" value="1h" checked>
+            <label for="1h">1h</label>
+            <input type="radio" name="timeframe" id="1d" value="1d">
+            <label for="1d">1d</label>
+            <input type="radio" name="timeframe" id="1w" value="1w">
+            <label for="1w">1w</label>
+        </div>
+    </div>
+    <div class="display">
+        <span>Показать:</span>
+        <div class="checkbox">
+            <section>
+                <input type="checkbox" name="" id="status-1h-growth" value="🟢" checked>
+                <label for="status-1h-growth"><span>1h</span>🟢</label>
+                <input type="checkbox" name="" id="status-1h-decline" value="🔴" checked>
+                <label for="status-1h-decline"><span>1h</span>🔴</label>
+            </section>
+            <section>
+                <input type="checkbox" name="" id="status-1d-growth" value="🟢" checked>
+                <label for="status-1d-growth"><span>1d</span>🟢</label>
+                <input type="checkbox" name="" id="status-1s-decline" value="🔴" checked>
+                <label for="status-1s-decline"><span>1d</span>🔴</label>
+            </section>
+            <section>
+                <input type="checkbox" name="" id="status-1w-growth" value="🟢" checked>
+                <label for="status-1w-growth"><span>1w</span>🟢</label>
+                <input type="checkbox" name="" id="status-1w-decline" value="🔴" checked>
+                <label for="status-1w-decline"><span>1w</span>🔴</label>
+            </section>
+        </div>
+    </div>
+    
+    <template id="list__item">
+        <li class="list__item">
+            <div class="wrapper">
+                <a class="list__link" target="_blank"></a>
+                <div class="dashboard">
+                    <div class="dashboard__timeframe">1h</div>
+                    <div class="dashboard__timeframe">1d</div>
+                    <div class="dashboard__timeframe">1w</div>
+                    <button class="dashboard__lamp dashboard__lamp_selected" data-timeframe = "1h"></button>
+                    <button class="dashboard__lamp " data-timeframe = "1d"></button>
+                    <button class="dashboard__lamp" data-timeframe = "1w"></button>
+                </div>
+            </div>
+            <canvas class="macd" width="280" height="100"></canvas>
+        </li>
+    </template>
+    <ul class="list"></ul>
+</body>
+</html>

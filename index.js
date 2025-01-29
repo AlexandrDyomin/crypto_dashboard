@@ -7,6 +7,34 @@ timeframes.addEventListener('change', (e) => {
     buttons.forEach((btn) => btn.click());
 });
 
+var display = document.querySelector('.display');
+display.addEventListener('change', (e) => {
+    var data = {
+        '1h': [],
+        '1d': [],
+        '1w': [],
+    };
+    
+    display.querySelectorAll('input:checked')
+        .forEach((checkbox) => {
+            data[`${checkbox.id.match(/1\w/)}`].push(checkbox.value);
+        });
+
+    document.querySelectorAll('.list__item')
+        .forEach((item) => {
+            var [lamp1h, lamp1d, lamp1w] = [...item.querySelectorAll('.dashboard__lamp')];
+            if (
+                data[lamp1h.dataset.timeframe].includes(lamp1h.textContent) ||
+                data[lamp1d.dataset.timeframe].includes(lamp1d.textContent) ||
+                data[lamp1w.dataset.timeframe].includes(lamp1w.textContent)
+            ) {
+                item.style.display = 'initial';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+});
+
 var data = await getData(['1h', '1d', '1w']);
 
 var list = document.querySelector('.list');

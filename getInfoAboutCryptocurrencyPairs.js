@@ -25,7 +25,7 @@ async function getMarketInfo(url, isSecondAttempt = false) {
     try {
         let response = await fetch(url, { signal: AbortSignal.timeout(10000) });
         if (!response.ok) throw Error(`Статусный код ответа: ${response.ok}`);
-        return await response.json();
+        return response.json();
     } catch(error) {
         if (isSecondAttempt) {
             throw Error('Вторая попытка получить список криптовалют закончились неудачей');

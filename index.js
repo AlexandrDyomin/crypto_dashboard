@@ -1,4 +1,5 @@
-import getData from "./getData.js";
+import getData from './getData.js';
+
 
 var timeframes = document.querySelector('.timeframes');
 timeframes.addEventListener('change', (e) => {
@@ -35,7 +36,10 @@ display.addEventListener('change', (e) => {
         });
 });
 
-var data = await getData(['1h', '1d', '1w']);
+var data = getData();
+Promise.allSettled(data).then((item) => {
+    item.forEach((item) => console.log(item.value))
+})
 
 var list = document.querySelector('.list');
 var listItemTemplate = document.getElementById('list__item')?.content;

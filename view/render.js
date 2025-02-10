@@ -1,16 +1,5 @@
-export function renderCard(target, template, data) {
-    var listItem = template.querySelector('.list__item');
-    listItem.dataset.volume = data.quoteVolume;
-    listItem.dataset.pair = data.pair;
-    var listLink = template.querySelector('.list__link');
-    listLink.textContent = data.pair;
-    listLink.href = `https://www.binance.com/ru/trade/${data.pair.replace('USDT', '_USDT')}?type=spot`;
-    var listPrice = template.querySelector('.list__price');
-    listPrice.textContent += data.price;
-    target.append(template);
-}
-
 export function drawMACDChart(canvas, data) {
+    clearCanvas(canvas);
     var c = canvas.getContext('2d');
     var w = 2;
     var gap = 2;

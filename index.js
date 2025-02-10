@@ -2,7 +2,7 @@ import { getMarketInfo } from './network/getMarketInfo.js';
 import { getTopCCP } from './processing/getTopCCP.js';
 import { calcMACD } from './processing/techIndicators.js';
 import { getPrices } from './network/getPrices.js';
-import { renderCard, drawMACDChart, clearCanvas } from './view/render.js';
+import { drawMACDChart } from './view/render.js';
 
 var marketInfo = await getMarketInfo();
 var topCCP = getTopCCP({ data: marketInfo, quotedCoin: 'USDT', limit: 100 });
@@ -34,41 +34,63 @@ topCCP.forEach((item) => {
 });
 
 var timeframes = document.querySelector('.timeframes');
+timeframes.querySelectorAll('input[name=timeframe]')
+    .forEach((radio) => radio.removeAttribute('disabled'));
 timeframes.addEventListener('change', (e) => {
     var targetValue = e.target.value;
     var buttons = document.querySelectorAll(`.dashboard__lamp[data-timeframe="${targetValue}"]`);
     buttons.forEach((btn) => btn.click());
 });
-
 var timeframe = timeframes.querySelector('input[checked]').value;
 updatePage(timeframe, topCCP);
 
 
 function updateCard(pair, timeframe) {
-    let { symbol } = pair;
-    let prices = getPrices({ pair: symbol, timeframe, limit: 100});
-    prices
-        .then((arr) => {
-            return {
-                pair: symbol,
-                lastPrice: +pair.lastPrice,
-                quoteVolume: +pair.quoteVolume,
-                [`macd_${timeframe}`]: calcMACD(arr),
-            };
-        })
-        .then((data) => {
-            var canvas = document.querySelector(`.list__item[data-pair="${data.pair}"] .macd`);
-            clearCanvas(canvas);
-            drawMACDChart(canvas, data[`macd_${timeframe}`].gist);
-        });
+    let prices = getPrices({ pair: pair.symbol, timeframe, limit: 100});
+        prices
+            .then(calcIndicators.bind(null, pair, timeframe))
+            .then(rerenderCharts.bind(null, ['macd'], timeframe));
 }
 
 function updatePage(timeframe, data) {
     for (let item of data) {
-        updateCard(item, timeframe)
+        updateCard(item, timeframe);
     }
 }
 
+
+function calcIndicators({ symbol, lastPrice, quoteVolume}, timeframe, prices) {
+    return {
+        pair: symbol,
+        lastPrice: +lastPrice,
+        quoteVolume: +quoteVolume,
+        [`macd_${timeframe}`]: calcMACD(prices),
+    };
+}
+
+function rerenderCharts(chartNames, timeframe, data) {
+    var drawChart = {
+        macd: drawMACDChart
+    };
+    
+    for (let name of chartNames) {
+        let chart = document.querySelector(`.list__item[data-pair="${data.pair}"] .${name}`);
+        drawChart[name](chart, data[`macd_${timeframe}`].gist);
+    }
+}
+
+
+function renderCard(target, template, data) {
+    var listItem = template.querySelector('.list__item');
+    listItem.dataset.volume = data.quoteVolume;
+    listItem.dataset.pair = data.pair;
+    var listLink = template.querySelector('.list__link');
+    listLink.textContent = data.pair;
+    listLink.href = `https://www.binance.com/ru/trade/${data.pair.replace('USDT', '_USDT')}?type=spot`;
+    var listPrice = template.querySelector('.list__price');
+    listPrice.textContent += data.price;
+    target.append(template);
+}
 
 
 

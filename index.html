@@ -8,13 +8,13 @@
     <title>MACD</title>
 </head>
 <body>
-    <h1>Прогноз на основе индикатора MACD(12, 26, 9)</h1>
+    <h1>Топ-100 криптовалютных пар по объему торгов за сутки</h1>
     <div class="timeframes">
         <span>Таймфреймы:</span>
         <div class="radio">
-            <input type="radio" name="timeframe" id="1h" value="1h" checked>
+            <input type="radio" name="timeframe" id="1h" value="1h" >
             <label for="1h">1h</label>
-            <input type="radio" name="timeframe" id="1d" value="1d">
+            <input type="radio" name="timeframe" id="1d" value="1d" checked>
             <label for="1d">1d</label>
             <input type="radio" name="timeframe" id="1w" value="1w">
             <label for="1w">1w</label>
@@ -48,16 +48,19 @@
         <li class="list__item">
             <div class="wrapper">
                 <a class="list__link" target="_blank"></a>
+                <span class="list__price">₮</span>
                 <div class="dashboard">
-                    <div class="dashboard__timeframe">1h</div>
-                    <div class="dashboard__timeframe">1d</div>
-                    <div class="dashboard__timeframe">1w</div>
-                    <button class="dashboard__lamp dashboard__lamp_selected" data-timeframe = "1h"></button>
-                    <button class="dashboard__lamp " data-timeframe = "1d"></button>
-                    <button class="dashboard__lamp" data-timeframe = "1w"></button>
+                    <button class="dashboard__lamp" data-timeframe = "1h">1h</button>
+                    <button class="dashboard__lamp dashboard__lamp_selected" data-timeframe = "1d">1d</button>
+                    <button class="dashboard__lamp" data-timeframe = "1w">1w</button>
                 </div>
             </div>
+            <div class="chart_name">PRICE:</div>
+            <canvas class="price" width="280" height="100"></canvas>
+            <div class="chart_name">MACD(12, 26, 9):</div>
             <canvas class="macd" width="280" height="100"></canvas>
+            <div class="chart_name">RSI(6):</div>
+            <canvas class="rsi" width="280" height="100"></canvas>
         </li>
     </template>
     <ul class="list"></ul>

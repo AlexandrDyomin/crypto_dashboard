@@ -71,4 +71,4 @@ function calcRSI(data) {
 
 }
 
-export { calcEma, calcSMA, calcBOLL, calcMACD };
+export { calcEma, calcSMA, calcBOLL, calcMACD, calcRSI };

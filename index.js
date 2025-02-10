@@ -2,7 +2,7 @@ import { getMarketInfo } from './network/getMarketInfo.js';
 import { getTopCCP } from './processing/getTopCCP.js';
 import { calcMACD } from './processing/techIndicators.js';
 import { getPrices } from './network/getPrices.js';
-import { drawMACDChart } from './view/render.js';
+import { drawMACDChart, drawCandles } from './view/render.js';
 
 var marketInfo = await getMarketInfo();
 var topCCP = getTopCCP({ data: marketInfo, quotedCoin: 'USDT', limit: 100 });
@@ -49,7 +49,7 @@ function updateCard(pair, timeframe) {
     let prices = getPrices({ pair: pair.symbol, timeframe, limit: 100});
         prices
             .then(calcIndicators.bind(null, pair, timeframe))
-            .then(rerenderCharts.bind(null, ['macd'], timeframe));
+            .then(rerenderCharts.bind(null, ['macd', 'price'], timeframe));
 }
 
 function updatePage(timeframe, data) {
@@ -60,23 +60,29 @@ function updatePage(timeframe, data) {
 
 
 function calcIndicators({ symbol, lastPrice, quoteVolume}, timeframe, prices) {
+    var macd = calcMACD(prices);
     return {
         pair: symbol,
         lastPrice: +lastPrice,
         quoteVolume: +quoteVolume,
-        [`macd_${timeframe}`]: calcMACD(prices),
+        prices: prices.slice(prices.length - macd.gist.length),
+        [`macd_${timeframe}`]: macd
     };
 }
 
 function rerenderCharts(chartNames, timeframe, data) {
     var drawChart = {
-        macd: drawMACDChart
+        macd: drawMACDChart,
+        price: drawCandles
     };
     
-    for (let name of chartNames) {
-        let chart = document.querySelector(`.list__item[data-pair="${data.pair}"] .${name}`);
-        drawChart[name](chart, data[`macd_${timeframe}`].gist);
-    }
+    let chart = document.querySelector(`.list__item[data-pair="${data.pair}"] .macd`);
+    drawChart.macd(chart, data[`macd_${timeframe}`].gist);
+
+    let price = document.querySelector(`.list__item[data-pair="${data.pair}"] .price`);
+    drawChart.price(price, data.prices);
+    // for (let name of chartNames) {
+    // }
 }
 
 
@@ -90,6 +96,7 @@ function renderCard(target, template, data) {
     var listPrice = template.querySelector('.list__price');
     listPrice.textContent += data.price;
     target.append(template);
+
 }
 
 

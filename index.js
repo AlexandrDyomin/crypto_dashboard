@@ -48,8 +48,8 @@ updatePage(timeframe, topCCP);
 function updateCard(pair, timeframe) {
     let prices = getPrices({ pair: pair.symbol, timeframe, limit: 100});
         prices
-            .then(calcIndicators.bind(null, pair, timeframe))
-            .then(rerenderCharts.bind(null, ['macd', 'price'], timeframe));
+            .then(calcIndicators.bind(null, pair))
+            .then(rerenderCharts.bind(null, ['macd', 'price']));
 }
 
 function updatePage(timeframe, data) {
@@ -59,25 +59,25 @@ function updatePage(timeframe, data) {
 }
 
 
-function calcIndicators({ symbol, lastPrice, quoteVolume}, timeframe, prices) {
+function calcIndicators({ symbol, lastPrice, quoteVolume}, prices) {
     var macd = calcMACD(prices);
     return {
         pair: symbol,
         lastPrice: +lastPrice,
         quoteVolume: +quoteVolume,
         prices: prices.slice(prices.length - macd.gist.length),
-        [`macd_${timeframe}`]: macd
+        macd: macd
     };
 }
 
-function rerenderCharts(chartNames, timeframe, data) {
+function rerenderCharts(chartNames, data) {
     var drawChart = {
         macd: drawMACDChart,
         price: drawCandles
     };
     
     let chart = document.querySelector(`.list__item[data-pair="${data.pair}"] .macd`);
-    drawChart.macd(chart, data[`macd_${timeframe}`].gist);
+    drawChart.macd(chart, data.macd.gist);
 
     let price = document.querySelector(`.list__item[data-pair="${data.pair}"] .price`);
     drawChart.price(price, data.prices);

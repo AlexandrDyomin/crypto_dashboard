@@ -1,7 +1,18 @@
-function calcSMA(data) {
-    return data.reduce((acc, price) => {
-        return acc + price / data.length;
-    }, 0);
+function calcSMA(data, period) {
+    if (data.length < period) return [];
+    let sma = [];
+
+    for (let i = 0; i < data.length - period + 1; i++) {
+
+        let value = data
+            .slice(i, period + i)
+            .reduce((acc, price, i, arr) => {
+                return acc + price / arr.length;
+            }, 0)
+        sma.push(value);
+    }
+
+    return sma
 }
 
 function calcEma(data, period) {
@@ -57,13 +68,20 @@ function calcMACD(data, macdConfig = [12, 26, 9]) {
     };
 }
 
-function calcBOLL(data, stdDevNumber = 2) {
-    let ml = calcSMA(data);
-    let e = data.reduce((acc, price) => acc + (price - ml)**2, 0);
+function calcBOLL(data, stdDevNumber = 2, period = 21) {
+    let ml = calcSMA(data, period);
+    let stdDev = [];
+    let tl = [];
+    let bl = [];
     
-    let stdDev = Math.sqrt(e / data.length);
-    let tl = (ml + (stdDevNumber * stdDev));
-    let bl = (ml - (stdDevNumber * stdDev));
+    for (let i = 0; i < data.length - period + 1; i++) {
+        var a = data.slice(i, i + period);
+        let e = a
+            .reduce((acc, price) => acc + (price - ml[i])**2, 0);
+        stdDev.push(Math.sqrt(e / (a.length)));
+        tl.push((ml[i] + (stdDevNumber * stdDev[i])));
+        bl.push((ml[i] - (stdDevNumber * stdDev[i])));
+    }
     return { tl, ml, bl };
 }
 

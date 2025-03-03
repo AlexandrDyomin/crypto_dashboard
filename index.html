@@ -20,30 +20,7 @@
             <label for="1w">1w</label>
         </div>
     </div>
-    <div class="display">
-        <span>Показать:</span>
-        <div class="checkbox">
-            <section>
-                <input type="checkbox" name="" id="status-1h-growth" value="🟢" checked>
-                <label for="status-1h-growth"><span>1h</span>🟢</label>
-                <input type="checkbox" name="" id="status-1h-decline" value="🔴" checked>
-                <label for="status-1h-decline"><span>1h</span>🔴</label>
-            </section>
-            <section>
-                <input type="checkbox" name="" id="status-1d-growth" value="🟢" checked>
-                <label for="status-1d-growth"><span>1d</span>🟢</label>
-                <input type="checkbox" name="" id="status-1d-decline" value="🔴" checked>
-                <label for="status-1d-decline"><span>1d</span>🔴</label>
-            </section>
-            <section>
-                <input type="checkbox" name="" id="status-1w-growth" value="🟢" checked>
-                <label for="status-1w-growth"><span>1w</span>🟢</label>
-                <input type="checkbox" name="" id="status-1w-decline" value="🔴" checked>
-                <label for="status-1w-decline"><span>1w</span>🔴</label>
-            </section>
-        </div>
-    </div>
-    
+   
     <template id="list__item">
         <li class="list__item">
             <div class="wrapper">
@@ -55,11 +32,11 @@
                     <button class="dashboard__lamp dashboard__lamp_selected" data-timeframe = "1w">1w</button>
                 </div>
             </div>
-            <div class="chart_name">PRICE:</div>
-            <canvas class="price" width="280" height="200"></canvas>
-            <div class="chart_name">MACD(12, 26, 9):</div>
+            <div class="chart_name">BOLL(21, 2): <span></span></div>
+            <canvas class="boll" width="280" height="200"></canvas>
+            <div class="chart_name">MACD(12, 26, 9): <span></span></div>
             <canvas class="macd" width="280" height="100"></canvas>
-            <div class="chart_name">RSI(6):</div>
+            <div class="chart_name">RSI(6): <span></span></div>
             <canvas class="rsi" width="280" height="100"></canvas>
         </li>
     </template>

@@ -1,8 +1,8 @@
 import { getMarketInfo } from './network/getMarketInfo.js';
 import { getTopCCP } from './processing/getTopCCP.js';
-import { calcMACD } from './processing/techIndicators.js';
+import { calcBOLL, calcMACD } from './processing/techIndicators.js';
 import { getPrices } from './network/getPrices.js';
-import { drawMACDChart, drawCandles } from './view/render.js';
+import { drawMACDChart, drawCandles, drawBOLL } from './view/render.js';
 
 var marketInfo = await getMarketInfo();
 var topCCP = getTopCCP({ data: marketInfo, quotedCoin: 'USDT', limit: 100 });
@@ -61,28 +61,28 @@ function updatePage(timeframe, data) {
 
 function calcIndicators({ symbol, lastPrice, quoteVolume}, prices) {
     var macd = calcMACD(prices);
+    var boll = {};
+    for (let [key, value]  of Object.entries(calcBOLL(prices))) {
+        boll[key] = value.slice(value.length - macd.gist.length);
+    }
+
     return {
         pair: symbol,
         lastPrice: +lastPrice,
         quoteVolume: +quoteVolume,
         prices: prices.slice(prices.length - macd.gist.length),
-        macd: macd
+        macd,
+        boll
     };
 }
 
 function rerenderCharts(chartNames, data) {
-    var drawChart = {
-        macd: drawMACDChart,
-        price: drawCandles
-    };
-    
-    let chart = document.querySelector(`.list__item[data-pair="${data.pair}"] .macd`);
-    drawChart.macd(chart, data.macd.gist);
+    let macd = document.querySelector(`.list__item[data-pair="${data.pair}"] .macd`);
+    drawMACDChart(macd, data.macd.gist);
 
     let price = document.querySelector(`.list__item[data-pair="${data.pair}"] .price`);
-    drawChart.price(price, data.prices);
-    // for (let name of chartNames) {
-    // }
+    drawCandles(price, data.prices);
+    drawBOLL(price, data.boll, data.prices);
 }
 
 
@@ -96,7 +96,6 @@ function renderCard(target, template, data) {
     var listPrice = template.querySelector('.list__price');
     listPrice.textContent += data.price;
     target.append(template);
-
 }
 
 

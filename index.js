@@ -1,6 +1,6 @@
 import { getMarketInfo } from './network/getMarketInfo.js';
 import { getTopCCP } from './processing/getTopCCP.js';
-import { calcBOLL, calcMACD } from './processing/techIndicators.js';
+import { calcBOLL, calcMACD, calcRSI } from './processing/techIndicators.js';
 import { getPrices } from './network/getPrices.js';
 import { drawMACDChart, drawCandles, drawBOLL } from './view/render.js';
 
@@ -72,18 +72,19 @@ function updatePage(timeframe, data) {
 
 function calcIndicators({ symbol, lastPrice, quoteVolume}, prices) {
     var macd = calcMACD(prices);
+    var rsi = calcRSI(prices);
     var boll = {};
     for (let [key, value]  of Object.entries(calcBOLL(prices))) {
         boll[key] = value.slice(value.length - macd.gist.length);
     }
-
     return {
         pair: symbol,
         lastPrice: +lastPrice,
         quoteVolume: +quoteVolume,
         prices: prices.slice(prices.length - macd.gist.length),
         macd,
-        boll
+        boll,
+        rsi
     };
 }
 

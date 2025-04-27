@@ -2,7 +2,7 @@ import { getMarketInfo } from './network/getMarketInfo.js';
 import { getTopCCP } from './processing/getTopCCP.js';
 import { calcBOLL, calcMACD, calcRSI } from './processing/techIndicators.js';
 import { getPrices } from './network/getPrices.js';
-import { drawMACDChart, drawCandles, drawBOLL } from './view/render.js';
+import { drawMACDChart, drawCandles, drawBOLL, drawRSI } from './view/render.js';
 
 var marketInfo = await getMarketInfo();
 var topCCP = getTopCCP({ data: marketInfo, quotedCoin: 'USDT', limit: 100 });
@@ -58,6 +58,8 @@ function updateCard(pair, timeframe) {
                 };
                 titles[0].textContent = ` ${analizeBOLL(data.prices.at(-1), boll)}`;
                 titles[1].textContent = ` ${analizeMACD(data.macd)}`;
+                titles[2].textContent = ` ${analizeRSI(data.rsi)}`;
+
                 return data;
             })
             .then(rerenderCharts);
@@ -84,7 +86,7 @@ function calcIndicators({ symbol, lastPrice, quoteVolume}, prices) {
         prices: prices.slice(prices.length - macd.gist.length),
         macd,
         boll,
-        rsi
+        rsi: rsi.slice(rsi.length - macd.gist.length)
     };
 }
 
@@ -95,6 +97,9 @@ function rerenderCharts(data) {
     let price = document.querySelector(`.list__item[data-pair="${data.pair}"] .boll`);
     drawCandles(price, data.prices);
     drawBOLL(price, data.boll, data.prices);
+
+    let rsi = document.querySelector(`.list__item[data-pair="${data.pair}"] .rsi`);
+    drawRSI(rsi, data.rsi);
 }
 
 
@@ -152,6 +157,26 @@ function analizeBOLL(price, { tl, ml, bl }) {
     }
 
     if (price < ml - (ml - bl) / 2) {
+        return messages.buy;
+    }
+
+    return messages.undefined;
+}
+
+function analizeRSI(data) {
+    var messages = {
+        buy: '🟢',
+        sell: '🔴',
+        undefined: '🧐'
+    };
+    
+    let rsi = data.at(-1);
+    
+    if (rsi >= 80) {
+        return messages.sell;
+    }
+
+    if (rsi <= 40) {
         return messages.buy;
     }
 

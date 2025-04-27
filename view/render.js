@@ -83,9 +83,41 @@ export function drawBOLL(canvas, data, prices) {
         for(let i = 1; i < data.length; i++) { 
             let dp = data[i];
             let y = (canvas.height * t) - (dp - minPrice) / k;
-            let x = startX + i*(w + gap);
+            let x = startX + i * (w + gap);
             c.lineTo(x, y);
         }
+        c.stroke();
+    }
+}
+
+export function drawRSI(canvas, data) {
+    clearCanvas(canvas);
+    var c = canvas.getContext('2d');
+    var w = 2;
+    var gap = 2;
+    var paddingLeft = 2.5;
+
+    drawLine(90, '#ab2213');
+    drawLine(30, '#13ab16');
+
+    c.beginPath();
+    c.strokeStyle = '#7d13ab'
+    c.moveTo(paddingLeft, canvas.height - data[0]);
+    
+    for(let i = 1; i < data.length; i++) {
+        let dp = data[i];
+        let y = canvas.height - dp;
+        let x = paddingLeft + i * (w + gap);
+        c.lineTo(x, y);
+    }
+    c.stroke();
+
+    function drawLine(y, color) {
+        c.beginPath();
+        c.strokeStyle = color;
+
+        c.moveTo(paddingLeft, canvas.height - y);
+        c.lineTo(canvas.width - paddingLeft, canvas.height - y);
         c.stroke();
     }
 }

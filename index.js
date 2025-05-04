@@ -112,7 +112,28 @@ function renderCard(target, template, data) {
     listLink.href = `https://www.binance.com/ru/trade/${data.pair.replace('USDT', '_USDT')}?type=spot`;
     var listPrice = template.querySelector('.list__price');
     listPrice.textContent += data.price;
+
+    // обработчик кнопки favorite
+    let favorite_btn = template.querySelector('.favorite');
+    favorite_btn.addEventListener('change', updateFavoriteStorage);
+
+    let storage = window.localStorage;
+    if (storage.getItem(data.pair)) {
+        favorite_btn.firstElementChild.checked = true;
+    }
     target.append(template);
+}
+
+function updateFavoriteStorage(e) {
+    let { target } = e;
+    let isChecked = target.checked;
+    let pair = target.closest('.list__item').dataset.pair;
+    let storage = window.localStorage;
+    if (isChecked) {
+        storage.setItem(pair, isChecked);
+    } else {
+        storage.removeItem(pair);
+    }
 }
 
 function analizeMACD(data) {

@@ -20,10 +20,15 @@
             <label for="1w">1w</label>
         </div>
     </div>
+    <ul class="list"></ul>
    
     <template id="list__item">
         <li class="list__item">
             <div class="wrapper">
+                <label class="favorite">
+                    <input type="checkbox" name="favorite">
+                    <span class="favorite__star"></span>
+                </label>
                 <a class="list__link" target="_blank"></a>
                 <span class="list__price">₮</span>
                 <div class="dashboard">
@@ -40,6 +45,5 @@
             <canvas class="rsi" width="280" height="100"></canvas>
         </li>
     </template>
-    <ul class="list"></ul>
 </body>
 </html>

@@ -211,7 +211,3 @@ input[name="favorite"]:checked + .favorite__star::before {
 .favorite__star:hover {
     background: linear-gradient(to bottom, rgba(224, 194, 75, 1) 0%, rgba(207, 125, 0, 1) 100%);
 }
-
-.favorite__star:hover:before {
-    background: linear-gradient(to bottom, rgba(243, 212, 85, 1) 0%, rgba(238, 164, 0, 1) 100%);
-}

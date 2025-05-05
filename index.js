@@ -44,6 +44,8 @@ timeframes.addEventListener('change', (e) => {
 var timeframe = timeframes.querySelector('input[checked]').value;
 updatePage(timeframe, topCCP);
 
+let favoriteView = document.querySelector('.view');
+favoriteView.addEventListener('change', changeView);
 
 function updateCard(pair, timeframe) {
     let prices = getPrices({ pair: pair.symbol, timeframe, limit: 100});
@@ -202,4 +204,23 @@ function analizeRSI(data) {
     }
 
     return messages.undefined;
+}
+
+function changeView(e) {
+    let { target } = e;
+    let listItems = document.querySelectorAll('.list__item');
+    if (target.value === 'favorite') {
+        let storage = window.localStorage;
+        
+        listItems.forEach((item) => {
+            let pair = item.querySelector('.list__link').textContent;
+            if (!storage.getItem(pair)) {
+                item.style.display = 'none';
+            }
+        });
+    } else {
+        listItems.forEach((item) => {
+            item.style.display = 'list-item';
+        });
+    }
 }

@@ -55,18 +55,23 @@ h1 {
 
 .all__btn:hover,
 .favorite__btn:hover {
+    background: rgba(86, 159, 86, 0.356);
+    border-color: rgba(86, 159, 86, 0.356);
+    color: whitesmoke;
+}
+
+input[name="view"]:checked + .all__btn,
+input[name="view"]:checked + .favorite__btn {
     background: green;
     border-color: green;
     color: whitesmoke;
 }
 
-input[name="view"]:focus-visible + .favorite__btn,
-input[name="view"]:focus-visible + .all__btn {
+input[name="view"]:focus + .favorite__btn,
+input[name="view"]:focus + .all__btn {
     border-color: green;
     box-shadow: inset 0px 0px 2px 1px;
 }
-
-
 
 /* список карточек */
 .list {
@@ -168,16 +173,13 @@ input[name="view"] {
     overflow: hidden;
 }
 
-input[name="favorite"]:checked + .favorite__star {
+input[name="favorite"]:checked + .favorite__star,
+input[name="favorite"]:focus-visible + .favorite__star {
     background: linear-gradient(to bottom, rgba(224, 194, 75, 1) 0%, rgba(207, 125, 0, 1) 100%);
 }
 
 input[name="favorite"]:checked + .favorite__star::before {
     background: linear-gradient(to bottom, rgba(243, 212, 85, 1) 0%, rgba(238, 164, 0, 1) 100%);
-}
-
-input[name="favorite"]:focus-visible + .favorite__star {
-    background: linear-gradient(to bottom, rgba(224, 194, 75, 1) 0%, rgba(207, 125, 0, 1) 100%);
 }
 
 .favorite__star {

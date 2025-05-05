@@ -29,6 +29,44 @@ h1 {
     margin-right: 5px;
 }
 
+/* кнопки выбора карточек */
+.view {
+    width: max-content;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.favorite__btn,
+.all__btn {
+    display: inline-block;
+    width: 100px;
+    padding: 5px;
+    border: 1px solid rgb(54, 141, 191);
+    border-radius: 10px;
+    background: white;
+    text-align: center;
+    color: rgba(0, 89, 89, 0.846);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .3s linear;
+}
+
+.all__btn:hover,
+.favorite__btn:hover {
+    background: green;
+    border-color: green;
+    color: whitesmoke;
+}
+
+input[name="view"]:focus-visible + .favorite__btn,
+input[name="view"]:focus-visible + .all__btn {
+    border-color: green;
+    box-shadow: inset 0px 0px 2px 1px;
+}
+
+
 
 /* список карточек */
 .list {
@@ -54,7 +92,7 @@ h1 {
 
 .wrapper {
     display: flex;
-    gap: 15px;
+    gap: 5px;
     align-items: center;
     justify-content: space-evenly;
     margin-bottom: 20px;
@@ -118,9 +156,11 @@ h1 {
 /* кнопка избранное */
 .favorite {
     display: inline;
+    cursor: pointer;
 }
 
-input[name="favorite"] {
+input[name="favorite"],
+input[name="view"] {
     width: 1px;
     height: 1px;
     position: absolute;

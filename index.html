@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="index.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="pig.jpeg" type="image/x-icon">
     <title>MACD</title>
 </head>
 <body>
@@ -20,16 +21,55 @@
             <label for="1w">1w</label>
         </div>
     </div>
-    <div class="view">
+    <form class="view" name="view">
         <label class="favorite">
-            <input type="radio" name="view" value="favorite">
+            <input type="radio" name="view" value="favorite" disabled>
             <span class="favorite__btn">Избранное</span>
         </label>
         <label class="all">
             <input type="radio" name="view" value="all" checked>
             <span class="all__btn">Все</span>
         </label>
-    </div>
+    </form>
+    <form class="filter" name="filter">
+        <fieldset>
+            <legend>Фильтр</legend>
+            <div class="filter__box">
+                <span class="filter__indicator">BOLL:</span>
+                <label class="filter__status">
+                    <input type="radio" name="boll" value="🟢">
+                    Покупать
+                </label>
+                <label class="filter__status">
+                    <input type="radio" name="boll" value="🔴">
+                    Продавать
+                </label>
+            </div>
+            <div class="filter__box">
+                <span class="filter__indicator">MACD:</span>
+                <label class="filter__status">
+                    <input type="radio" name="macd" value="🟢">
+                    Покупать
+                </label>
+                <label class="filter__status">
+                    <input type="radio" name="macd" value="🔴">
+                    Продавать
+                </label>
+            </div>
+            <div class="filter__box">
+                <span class="filter__indicator">RSI:</span>
+                <label class="filter__status">
+                    <input type="radio" name="rsi" value="🟢">
+                    Покупать
+                </label>
+                <label class="filter__status">
+                    <input type="radio" name="rsi" value="🔴">
+                    Продавать
+                </label>
+            </div>
+            <button class="filter__reset" type="reset" >Сбросить фильтр</button>
+        </fieldset>
+    </form>
     <ul class="list"></ul>
    
     <template id="list__item">
@@ -47,11 +87,11 @@
                     <button class="dashboard__lamp dashboard__lamp_selected" data-timeframe = "1w">1w</button>
                 </div>
             </div>
-            <div class="chart_name">BOLL(21, 2): <span></span></div>
+            <div class="chart-name" data-name="boll">BOLL(21, 2): <span></span></div>
             <canvas class="boll" width="280" height="200"></canvas>
-            <div class="chart_name">MACD(12, 26, 9): <span></span></div>
+            <div class="chart-name" data-name="macd">MACD(12, 26, 9): <span></span></div>
             <canvas class="macd" width="280" height="100"></canvas>
-            <div class="chart_name">RSI(6): <span></span></div>
+            <div class="chart-name" data-name="rsi">RSI(6): <span></span></div>
             <canvas class="rsi" width="280" height="100"></canvas>
         </li>
     </template>

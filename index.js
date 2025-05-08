@@ -19,7 +19,7 @@ topCCP.forEach((item) => {
         e.target.classList.add('dashboard__lamp_selected');
         var timeframe = e.target.dataset.timeframe;
         var pair = topCCP.find((item) => item.symbol === e.target.closest('.list__item').dataset.pair);
-        updateCard(pair, timeframe);
+        updateCard(pair, timeframe, e.isTrusted);
     })
 
     renderCard(
@@ -41,18 +41,31 @@ timeframes.addEventListener('change', (e) => {
     var buttons = document.querySelectorAll(`.dashboard__lamp[data-timeframe="${targetValue}"]`);
     buttons.forEach((btn) => btn.click());
 });
+
 var timeframe = timeframes.querySelector('input[checked]').value;
 updatePage(timeframe, topCCP);
 
-let favoriteView = document.querySelector('.view');
-favoriteView.addEventListener('change', changeView);
+let filter = document.forms.filter;
+filter.addEventListener('change', apllyFilter);
+filter.addEventListener('reset', (e) => {
+    filter.querySelectorAll('input:checked')
+        .forEach((item) => item.checked = false);
+    filter.dispatchEvent(new Event('change'));
+});
 
-function updateCard(pair, timeframe) {
+let favoriteView = document.querySelector('.view');
+favoriteView.view[0].removeAttribute('disabled');
+favoriteView.addEventListener('change', changeView);
+favoriteView.addEventListener('change', () => filter.dispatchEvent(new Event('change')));
+
+
+// определения функций
+async function updateCard(pair, timeframe, isTrusted) {
     let prices = getPrices({ pair: pair.symbol, timeframe, limit: 100});
         prices
             .then(calcIndicators.bind(null, pair))
             .then((data) => {
-                var titles = document.querySelectorAll(`.list__item[data-pair="${data.pair}"] .chart_name span`);
+                var titles = document.querySelectorAll(`.list__item[data-pair="${data.pair}"] .chart-name span`);
                 var boll = {
                     tl: data.boll.tl.at(-1),
                     ml: data.boll.ml.at(-1),
@@ -64,7 +77,8 @@ function updateCard(pair, timeframe) {
 
                 return data;
             })
-            .then(rerenderCharts);
+            .then(rerenderCharts)
+            .then(() => !isTrusted && filter.dispatchEvent(new Event('change')));
 }
 
 function updatePage(timeframe, data) {
@@ -207,13 +221,13 @@ function analizeRSI(data) {
 }
 
 function changeView(e) {
-    let { target } = e;
-    let listItems = document.querySelectorAll('.list__item');
+    var { target } = e;
+    var listItems = list.querySelectorAll('.list__item');
     if (target.value === 'favorite') {
-        let storage = window.localStorage;
+        var storage = window.localStorage;
         
         listItems.forEach((item) => {
-            let pair = item.querySelector('.list__link').textContent;
+            var pair = item.querySelector('.list__link').textContent;
             if (!storage.getItem(pair)) {
                 item.style.display = 'none';
             }
@@ -223,4 +237,37 @@ function changeView(e) {
             item.style.display = 'list-item';
         });
     }
+}
+
+function apllyFilter(e) {
+    var setting = [...e.currentTarget.querySelectorAll('input:checked')]
+        .reduce((acc, input) => {
+            acc[input.name] = input.value;
+            return acc;
+        }, {});
+    
+    var view = [...document.forms.view.view].filter((item) => item.checked)[0].value;
+    
+    var listItems = view === 'all' ? [...list.querySelectorAll('.list__item')] : 
+        [...list.querySelectorAll('.list__item')]
+            .filter((item) => item.querySelector('input[name="favorite"]').checked);
+
+    listItems.forEach((item) => {
+        var cardMsg = [...item.querySelectorAll('.chart-name')]
+            .reduce((acc, item) => {
+                if(setting[item.dataset.name]) {
+                    acc[item.dataset.name] = item.firstElementChild.textContent.trim();
+                }
+                return acc;
+            }, {});
+        
+        if (setting.boll === cardMsg.boll &&
+            setting.macd === cardMsg.macd &&
+            setting.rsi === cardMsg.rsi
+        ) {
+            item.style.display = 'list-item';
+        } else {
+            item.style.display = 'none';
+        }
+    });
 }

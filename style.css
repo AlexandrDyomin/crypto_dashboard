@@ -90,9 +90,10 @@ input[name="view"]:focus + .all__btn {
 
 .filter__box {
     display: grid;
-    grid-template-columns: 0.6fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 3px;
     margin-bottom: 7px;
+    text-align: start;
 }
 
 .filter__reset {
